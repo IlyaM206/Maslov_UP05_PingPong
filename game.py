@@ -87,3 +87,27 @@ class PongGame:
 
         self.ball["x"] += self.ball["dx"]
         self.ball["y"] += self.ball["dy"]
+
+        # Отскок от верха/низа
+        if self.ball["y"] <= self.ball_size // 2 or self.ball["y"] >= self.h - self.ball_size // 2:
+            self.ball["dy"] = -self.ball["dy"]
+
+        # Границы мяча
+        left = self.ball["x"] - self.ball_size // 2
+        right = self.ball["x"] + self.ball_size // 2
+        top = self.ball["y"] - self.ball_size // 2
+        bottom = self.ball["y"] + self.ball_size // 2
+
+        # Левая ракетка
+        if left <= self.margin + self.pw and right >= self.margin and \
+                bottom >= self.player1_y and top <= self.player1_y + self.ph:
+            self.ball["dx"] = abs(self.ball["dx"]) * 1.05
+            offset = (self.ball["y"] - (self.player1_y + self.ph / 2)) / (self.ph / 2)
+            self.ball["dy"] = offset * 5
+
+        # Правая ракетка
+        if right >= self.w - self.margin - self.pw and left <= self.w - self.margin and \
+                bottom >= self.player2_y and top <= self.player2_y + self.ph:
+            self.ball["dx"] = -abs(self.ball["dx"]) * 1.05
+            offset = (self.ball["y"] - (self.player2_y + self.ph / 2)) / (self.ph / 2)
+            self.ball["dy"] = offset * 5

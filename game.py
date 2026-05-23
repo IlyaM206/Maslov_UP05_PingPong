@@ -111,3 +111,50 @@ class PongGame:
             self.ball["dx"] = -abs(self.ball["dx"]) * 1.05
             offset = (self.ball["y"] - (self.player2_y + self.ph / 2)) / (self.ph / 2)
             self.ball["dy"] = offset * 5
+
+        # Голы
+        if self.ball["x"] < 0:
+            self.score2 += 1
+            self.reset_ball()
+        elif self.ball["x"] > self.w:
+            self.score1 += 1
+            self.reset_ball()
+
+        # Проверка победы
+        if self.score1 >= self.win_score or self.score2 >= self.win_score:
+            self.game_over = True
+
+    def reset_ball(self):
+        self.ball["x"] = self.w // 2
+        self.ball["y"] = self.h // 2
+        self.ball["dx"] = random.choice([-5, 5])
+        self.ball["dy"] = random.uniform(-3, 3)
+
+    def draw(self):
+        self.canvas.delete("all")
+
+        # Рисуем фон заново (если есть)
+        if hasattr(self, 'bg_img'):
+            self.canvas.create_image(0, 0, image=self.bg_img, anchor="nw")
+        else:
+            self.canvas.config(bg='#1a1a2e')
+
+        # Центральная линия
+        for i in range(0, self.h, 40):
+            self.canvas.create_line(self.w // 2, i, self.w // 2, i + 20, fill="#333", width=3, dash=(15, 10))
+
+        # Ракетки
+        self.canvas.create_rectangle(self.margin, self.player1_y, self.margin + self.pw, self.player1_y + self.ph,
+                                     fill="#8f02fe", outline="white", width=2)
+        self.canvas.create_rectangle(self.w - self.margin - self.pw, self.player2_y, self.w - self.margin,
+                                     self.player2_y + self.ph,
+                                     fill="#00d25c", outline="white", width=2)
+
+        # Мяч
+        self.canvas.create_oval(self.ball["x"] - self.ball_size // 2, self.ball["y"] - self.ball_size // 2,
+                                self.ball["x"] + self.ball_size // 2, self.ball["y"] + self.ball_size // 2,
+                                fill="white", outline="#FFD700", width=2)
+
+        # Счет
+        self.canvas.create_text(self.w // 2, 40, text=f"{self.score1}  -  {self.score2}",
+                                fill="white", font=("Arial", 36, "bold"))

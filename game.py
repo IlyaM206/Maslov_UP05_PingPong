@@ -38,3 +38,52 @@ class PongGame:
             "dx": random.choice([-5, 5]),
             "dy": random.uniform(-3, 3)
         }
+
+        # Загружаем фон (если файл существует)
+        try:
+            bg_image = Image.open("images/fongame.jpg").resize((width, height), Image.Resampling.LANCZOS)
+            self.bg_img = ImageTk.PhotoImage(bg_image)
+            self.canvas.create_image(0, 0, image=self.bg_img, anchor="nw")
+        except Exception():
+            # Если фона нет, просто заливаем Canvas темным цветом
+            self.canvas.config(bg='#1a1a2e')
+
+        self.setup_binds()
+        self.update()
+
+    def setup_binds(self):
+        self.root.bind("<KeyPress-w>", lambda e: self.key_press("w", True))
+        self.root.bind("<KeyRelease-w>", lambda e: self.key_press("w", False))
+        self.root.bind("<KeyPress-s>", lambda e: self.key_press("s", True))
+        self.root.bind("<KeyRelease-s>", lambda e: self.key_press("s", False))
+        self.root.bind("<KeyPress-Up>", lambda e: self.key_press("up", True))
+        self.root.bind("<KeyRelease-Up>", lambda e: self.key_press("up", False))
+        self.root.bind("<KeyPress-Down>", lambda e: self.key_press("down", True))
+        self.root.bind("<KeyRelease-Down>", lambda e: self.key_press("down", False))
+        self.root.bind("<Escape>", self.quit_to_menu)
+
+    def key_press(self, key, pressed):
+        self.keys[key] = pressed
+
+    def quit_to_menu(self, event = None):
+        if messagebox.askyesno("Выход", "Выйти в меню?"):
+            self.canvas.destroy()
+            from main import StartMenu
+            StartMenu(self.root)
+
+    def move_paddles(self):
+        if self.keys.get("w"):
+            self.player1_y = max(0, self.player1_y - self.speed)
+        if self.keys.get("s"):
+            self.player1_y = min(self.h - self.ph, self.player1_y + self.speed)
+        if self.keys.get("up"):
+            self.player2_y = max(0, self.player2_y - self.speed)
+        if self.keys.get("down"):
+            self.player2_y = min(self.h - self.ph, self.player2_y + self.speed)
+
+    def update_ball(self):
+        if self.game_over:
+            return
+
+        self.ball["x"] += self.ball["dx"]
+        self.ball["y"] += self.ball["dy"]

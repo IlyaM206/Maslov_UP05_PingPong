@@ -38,7 +38,7 @@ class StartMenu:
         )
         btn.place(relx=0.5, rely=0.5, anchor="center")
 
-        # кнопка выхода – тоже можно поместить в центр, но для удобства оставим внизу справа
+        # кнопка выхода
         exit_btn = tk.Button(self.canvas, text="ВЫХОД", font=("Arial", 14), bg="#F44336", fg="white",
                              command=root.quit, cursor="hand2", width=8)
         exit_btn.place(x=self.w - 100, y=self.h - 50)

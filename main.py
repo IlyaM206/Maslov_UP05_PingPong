@@ -25,6 +25,8 @@ class StartMenu:
             Image.open(self.IMAGE_BACKGROUND).resize((1280,720), Image.Resampling.LANCZOS)
         )
         self.canvas.create_image(0, 0, image=self.bg_img, anchor="nw")
+
+
         # кнопка "Играть"
         self.start_img = ImageTk.PhotoImage(Image.open("images/startbut.png").resize((500,200), Image.Resampling.LANCZOS))
 
@@ -40,3 +42,21 @@ class StartMenu:
         exit_btn = tk.Button(self.canvas, text="ВЫХОД", font=("Arial", 14), bg="#F44336", fg="white",
                              command=root.quit, cursor="hand2", width=8)
         exit_btn.place(x=self.w - 100, y=self.h - 50)
+
+        # управление
+        self.canvas.create_text(self.w//2, self.h - 60, text="Управление: W/S (левый) | ↑/↓ (правый) | ESC → меню",
+                                fill="gray", font=("Arial", 14))
+    try:
+        def start_game(self):
+            self.canvas.destroy()
+            PongGame(self.root, self.w, self.h)
+    except Exception():
+        pass
+
+def main():
+    root = tk.Tk()
+    StartMenu(root)
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()

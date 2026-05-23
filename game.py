@@ -158,3 +158,18 @@ class PongGame:
         # Счет
         self.canvas.create_text(self.w // 2, 40, text=f"{self.score1}  -  {self.score2}",
                                 fill="white", font=("Arial", 36, "bold"))
+
+        # Победа
+        if self.game_over:
+            winner = "Игрок 1" if self.score1 >= self.win_score else "Игрок 2"
+            self.canvas.create_text(self.w // 2, self.h // 2, text=f"{winner} ПОБЕДИЛ!",
+                                    fill="#FFD700", font=("Arial", 48, "bold"))
+            self.canvas.create_text(self.w // 2, self.h // 2 + 60, text="Нажмите ESC",
+                                    fill="white", font=("Arial", 20))
+
+    def update(self):
+        if not self.game_over:
+            self.move_paddles()
+            self.update_ball()
+        self.draw()
+        self.root.after(16, self.update)
